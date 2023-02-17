@@ -56,6 +56,11 @@ estado_civil = 'D'
 #else:
     #print('El usuario esta soltero')
 
+cadena_texto = "Hola, soy alumno del G11 backend"
+
+for letra in cadena_texto:
+    
+    print(letra)
 
 
 
