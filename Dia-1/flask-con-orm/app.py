@@ -1,10 +1,24 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
+from base_de_datos import conexion
+from dotenv import load_dotenv
+from os import environ
+from flask_migrate import Migrate
+from models.nivel_model import Nivel
+from models.maestro_model import Maestro
+from models.seccion_model import Seccion
+
+
+# es el encargado de leer el archivo .env si es que existe y agregar
+load_dotenv()
 
 app = Flask(__name__)
-print(app.config)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:root@localhost:5432/colegio'
-conexion = SQLAlchemy(app=app)
+app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('DATABASE_URL')
+# si quiero crear mi conexion en otro archivo e inicializar la configuracion
+conexion.init_app(app)
+
+# ahora realizo la inicializacion de mi clase Migrate
+# se le pasa la aplicacion como primer parametro y la conexion (instancia de SQLMigrate)
+Migrate(app=app, db=conexion)
 
 
 if __name__== '__main__':
