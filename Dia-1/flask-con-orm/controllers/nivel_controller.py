@@ -14,8 +14,8 @@ class NivelController(Resource):
 
         dto = NivelDto()
         # dump > es un metodo en el cual le paso la/las instancias que quieres convertir a tiipos de datos genericos. Si se le pasa mas de una instancia, osea una lista de instancias, se le tiene que adicionar el parametro many=True para indicar 
-        print(resultado[0].numero)
-        print(resultado[0].descripcion)
+        niveles = dto.dump(resultado, many=True)
+
         niveles = []
         for nivel in resultado:
             niveles.append({
@@ -47,11 +47,10 @@ class NivelController(Resource):
                 'message': 'Nivel creado exitosamente'
             }, 201
         except Exception as error:
-             return {
-                  'message': 'Error al crear el nivel'
-                  'content': error.args
-             }
-
+            return {
+                'message': 'Error al crear el nivel',
+                'content': error.args
+            }
 class UnNivelController(Resource):
     def get(self, id):
         query: Query = conexion.session.query(Nivel)
