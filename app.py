@@ -7,7 +7,7 @@ from flask_restful import Api
 
 from utils.enviar_correo import enviar_correo_adjunto
 from controllers.usuario_controller import RegistroController
-from controllers.categoria_controller import ImagenesController
+from controllers.categoria_controller import ImagenesController, CategoriasController
 
 load_dotenv()
 
@@ -30,6 +30,7 @@ def enviar_correo_prueba():
 
 api.add_resource(RegistroController, '/registro')
 api.add_resource(ImagenesController, '/imagenes', '/imagenes/<nombre>')
+api.add_resource(CategoriasController, '/categorias')
 
 
 if __name__== '__main__':
