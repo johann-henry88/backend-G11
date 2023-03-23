@@ -5,11 +5,14 @@ from dtos.producto_dto import ProductoDto, MostrarProductoDto
 from os import path
 from werkzeug.utils import secure_filename
 from uuid import uuid4
+
+
 class ProductosController(Resource):
     def post(self):
-        data = request.form
+        data = request.form.to_dict()
         # TODO: Validar que tengamos esa llave en el formulario llamada 'imagen
         # TODO: validar que solo sean imagenes
+        mimetype_valido = 'image/'
         imagen = request.files.get('imagen')
         # TODO: agregar un uuid al nombre de la imagen y sea un nombre valido
         # TODO: no recibir imagenes que pesen mas de 10MB
@@ -27,11 +30,12 @@ class ProductosController(Resource):
             
             dto = ProductoDto()
             nombre_seguro = secure_filename(uuid4().hex + '-' + imagen.filename)
+            data['imagen'] = nombre_seguro
             data_serializada = dto.load(data)
             nuevo_producto = Producto(**data_serializada)
 
             conexion.session.add(nuevo_producto)
-            imagen.save(path.join('imagenes', data['imagen']))
+            imagen.save(path.join('imagenes', data['imagen_seguro']))
 
             conexion.session.commit()
             return {
@@ -43,4 +47,12 @@ class ProductosController(Resource):
                 'message': 'Error al crear el producto',
                 'content': error.args
             }
+        
+    def get(self):
+        resultado = conexion.session.query(Producto).all()
+        dto = MostrarProductoDto()
+        data = dto.dump(resultado, many=True)
+        return {
+            'content': data
+        }
             
