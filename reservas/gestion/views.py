@@ -1,8 +1,9 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.request import Request
-from .models import Categoria
-from .serializers import PruebaSerializer, CategoriaSerializer
+from rest_framework import status
+from .models import Categoria, Producto
+from .serializers import PruebaSerializer, CategoriaSerializer, ProductoSerializer
 
 class PruebaView(APIView):
     def get(self, request):
@@ -123,3 +124,42 @@ class UnaCategoriaView(APIView):
         return Response(data={
             'message': 'Categoria eliminada exitosamente'
         })
+    
+class ProductosView(APIView):
+    def post(self, request: Request):
+        data = request.data
+        data_serializada = ProductoSerializer(data=data)
+        if data_serializada.is_valid():
+            nuevo_producto = data_serializada.save()
+            
+            resultado = ProductoSerializer(instance=nuevo_producto)
+
+            return Response(data={
+                'message': 'Producto creado exitosamente',
+                'content': resultado.data
+            }, status=status.HTTP_201_CREATED)
+        else:
+            return Response(data={
+                'message': 'Error al crear el producto',
+                'content': data_serializada.errors
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+    def get(self, request: Request):
+        # Pasos para hacer la paginacion manual
+        #Primero obtenemos los query params que me serviran para orientarme en la pagina
+        page = int(request.query_params.get('page'))
+        perPage = int(request.query_params.get('perPage', 10))
+        # cuantos te vas a saltar
+        skip = (page - 1) * perPage
+
+        #cuantos vas a tomar, es el mismo valor que perPage
+        take = perPage * page
+        print(skip)
+        print(take)
+        
+        productos = Producto.objects.all()[skip:take]
+        data_serializada = ProductoSerializer(instance=productos, many=True)
+
+        return Response(data={
+            'content': data_serializada.data
+        },status=status.HTTP_200_OK)
