@@ -43,7 +43,7 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
 
     # Cuando querramos crear un superusuario por la terminal tendremos que indicar que atributos son los que nos debe de solicitar
     # El correo no va porque ya esta definido en USERNAME_FIELD y si lo volvemos a poner nos dara un error, y el password es ya solicitado de manera automatica
-    REQUIRED_FIELDS = ['nombre', 'apellido']
+    REQUIRED_FIELDS = ['nombre', 'apellido', 'tipoUsuario']
 
     objects = ManejoUsuario
     class Meta:
