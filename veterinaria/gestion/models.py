@@ -50,7 +50,7 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     class Meta:
         db_table = 'usuarios'
 
-class Masctos(models.Model):
+class Mascota(models.Model):
     id = models.AutoField(primary_key=True, null=False)
     nombre = models.TextField(null=False)
     sexo = models.TextField(choices=[('HEMBRA', 'HEMBRA'), ('MACHO', 'MACHO')])
