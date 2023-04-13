@@ -2,3 +2,5 @@ entorno_django/
 *.pyc
 
 .env
+
+entorno_django
