@@ -11,9 +11,27 @@ datasource db {
 }
 
 model Categoria {
+  id             Int     @id @default(autoincrement())
+  nombre         String
+  descripcion    String?
+  disponibilidad Boolean @default(true)
+
+  productos Producto[]
+
+  @@map("categorias")
+}
+
+
+model Producto {
   id Int @id @default(autoincrement())
   nombre String
-  descripcion String?
-  disponibilidad Boolean @default(true)
-  @@map("categorias")
+  precio Float
+  fechaVencimiento DateTime @map("fecha_vencimiento")
+  categoriaId Int @map("categoria_id")
+
+  // creamos las relaciones
+  // https://www.prisma.io/docs/concepts/components/prisma-schema/relations
+  categoria Categoria @relation(fields: [categoriaId], references: [id])
+
+  @@map("productos")
 }
