@@ -1,0 +1,3 @@
+db         > muestra en que base de datos nos ubicamos
+show dbs   > lista las bases de datos que existen en mi servidor
+use DB_NAME> crear y movernos a esa base de datos, si no existe la crea y si existe solamente nos movemos
