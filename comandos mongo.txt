@@ -1,3 +1,92 @@
 db         > muestra en que base de datos nos ubicamos
 show dbs   > lista las bases de datos que existen en mi servidor
 use DB_NAME> crear y movernos a esa base de datos, si no existe la crea y si existe solamente nos movemos
+
+
+-- COMANDOS PRÁCTICOS
+-- Para insertar
+db.personas.insertOne({ nombre: 'Eduardo', apellido: 'de Rivero', correo: 'ederiveroman@gmail.com' })
+db.personas.intertMany( [ { nombre: 'Maria' }, { sexo: 'M', fechaNacimiento: new Date('1995-07-31') } ] )
+db.personas.insertMany( [ { nombre: 'Maria' }, { sexo: 'M', fechaNacimiento: new Date('1995-07-31') } ] )
+db.personas.insertOne({ nombre: 'Juan', sexo: 'M'})
+
+
+-- Para buscar
+-- SELECCIONE * DESDE personas;
+db.personas.find()
+
+-- Hacer busquedas mas especificas
+db.personas.find({ $o: [ { nombre : 'Juan' }, { nombre: 'Eduardo' } ] } )
+
+
+-- Insertar en la tabla productos los siguientes valores
+[
+    {
+        nombre: 'piña',
+        precio: 1,80,
+        disponibles: cierto
+    },
+    {
+        nombre:'frambuesa',
+        precio: 5,20,
+        disponibles: cierto
+    },
+    {
+        nombre: 'pitahaya',
+        precio: 4,50,
+        disponible: falso
+    },
+    {
+        nombre: 'sauco',
+        precio: 8,50,
+        disponibles: cierto
+    }
+]
+
+-- Buscar todos los productos cuyo nombre sea 'pitahaya'
+db.productos.find({nombre:'pitahaya' } )
+
+-- Buscar todos los productos cuyo nombre sea 'frambuesa' o 'sauco'
+db.productos.find({ $o: [ {nombre: 'frambuesa' } , { nombre: 'sauco' } ]} )
+
+-- Buscar todos los productos cuyo nombre sea 'toronja' o 'piña' Y su precio sea mayor a 1,00
+db.productos.find( {
+    $ y : [
+        {
+            $o: [
+                {
+                    nombre: 'toronja'
+                },
+                {
+                    nombre: 'piña'
+                }
+            ] ,
+            precio: {
+                $gt: 1.00
+            }
+        } ]
+    } )
+
+
+-- Buscar todos los productos que valen menos de 5.00 y que están disponibles
+-- Sin el operador $and
+
+db.productos.find({
+    precio: {
+        $lt: 5.00
+    },
+    disponibles: cierto
+})
+
+-- Con el operador $and
+
+db.productos.find({
+    $y:[{
+        precio: {
+            $lt: 5.00
+        }
+    },
+    {
+        disponibles: cierto
+    }]
+})
